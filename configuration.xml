@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="postcodeapiConfig">
+        <fields name="rsformConfig">
+            <field name="postcodeapi.code"
+                   type="text"
+                   description="PLG_RSFP_POSTCODEAPI_CODE_DESCRIPTION"
+                   label="PLG_RSFP_POSTCODEAPI_CODE_LABEL"
+                   default=""/>
+        </fields>
+    </fieldset>
+    <fieldset name="formConfig">
+        <fields name="postcodeapiParams">
+            <field
+                    type="spacer"
+                    name="postcodeapi.intro"
+                    class="text"
+                    label="PLG_RSFP_POSTCODEAPI_INTRO" />
+            <field name="published"
+                   type="radio"
+                   class="btn-group btn-group-yesno"
+                   description="PLG_RSFP_POSTCODEAPI_INTEGRATION_DESCRIPTION"
+                   label="PLG_RSFP_POSTCODEAPI_INTEGRATION_LABEL"
+                   default="0"
+            >
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+        </fields>
+    </fieldset>
+</form>
