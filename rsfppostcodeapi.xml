@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5" type="plugin" group="system" method="upgrade">
-<name>System - RSForm! Pro Postcode API</name>
-<author>Perfect Web Team - Hans Kuijpers</author>
-<creationDate>February 2018</creationDate>
-<license>GPLv3 http://www.gnu.org/licenses/gpl.html</license>
-<authorEmail>extensions@perfectwebteam.com</authorEmail>
-<authorUrl>https://extensions.perfectwebteam.com</authorUrl>
-<version>1.0.0</version>
-<description><![CDATA[PLG_RSFP_POSTCODEAPI_DESCRIPTION]]></description>
-<scriptfile>script.php</scriptfile>
+	<name>System - RSForm! Pro Postcode API</name>
+	<author>Perfect Web Team - Hans Kuijpers</author>
+	<creationDate>February 2018</creationDate>
+	<license>GPLv3 http://www.gnu.org/licenses/gpl.html</license>
+	<authorEmail>extensions@perfectwebteam.com</authorEmail>
+	<authorUrl>https://extensions.perfectwebteam.com</authorUrl>
+	<version>1.0.0</version>
+	<description><![CDATA[PLG_RSFP_POSTCODEAPI_DESCRIPTION]]></description>
+	<scriptfile>script.php</scriptfile>
 
-<files>
-	<filename plugin="rsfppostcodeapi">rsfppostcodeapi.php</filename>
-	<filename>configuration.xml</filename>
-	<filename>index.html</filename>
-	<folder>sql</folder>
-</files>
+	<files>
+		<filename plugin="rsfppostcodeapi">rsfppostcodeapi.php</filename>
+		<filename>configuration.xml</filename>
+		<folder>language</folder>
+		<folder>sql</folder>
+	</files>
 
-<languages folder="language/en-GB">
-	<language tag="en-GB">en-GB.plg_system_rsfppostcodeapi.ini</language>
-	<language tag="en-GB">en-GB.plg_system_rsfppostcodeapi.sys.ini</language>
-</languages>
+	<media folder="media" destination="plg_system_rsfppostcodeapi">
+		<filename>rsfppostcodeapi.php</filename>
+		<folder>js</folder>
+	</media>
 
-<media folder="media" destination="plg_system_rsfppostcodeapi">
-	<filename>rsfppostcodeapi.php</filename>
-	<folder>js</folder>
-</media>
+	<updateservers>
+		<server type="extension" priority="1" name="RSForm! Pro - Postcode API">https://raw.githubusercontent.com/perfectwebteam/plg_system_rsfppostcodeapi/master/update/extension.xml</server>
+	</updateservers>
 </extension>
