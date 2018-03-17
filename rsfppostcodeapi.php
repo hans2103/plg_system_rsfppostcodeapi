@@ -200,7 +200,7 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 
 		$form = new Form('rsfppostcodeapi');
 		$form->loadFile(__DIR__ . '/configuration.xml');
-		$data = array('published' => $row->published);
+		$data = array('postcodeapiParams' => array('published' => $row->published));
 		$form->bind($data);
 
 		echo '<div id="postcodeapidiv">';
