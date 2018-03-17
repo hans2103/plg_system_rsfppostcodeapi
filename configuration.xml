@@ -15,7 +15,7 @@
                     type="spacer"
                     name="postcodeapi.intro"
                     class="text"
-                    label="PLG_RSFP_POSTCODEAPI_INTRO" />
+                    label="PLG_RSFP_POSTCODEAPI_INTRO"/>
             <field name="published"
                    type="radio"
                    class="btn-group btn-group-yesno"
