@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updates>
+    <update>
+        <version>1.0.0</version>
+        <name>System - RSForm! Pro Postcode API</name>
+        <description>
+            <![CDATA[The Postcode API Plugin allows integration between RSForm! Pro and the PostCode API.]]></description>
+        <element>rsfppostcodeapi</element>
+        <type>plugin</type>
+        <folder>system</folder>
+        <client>0</client>
+        <infourl title="Postcode API - RSForm! Pro ">https://github.com/perfectwebteam/plg_system_rsfppostcodeapi
+        </infourl>
+
+        <downloads>
+            <downloadurl type="full" format="zip">
+                https://github.com/perfectwebteam/plg_system_rsfppostcodeapi/archive/1.0.0.zip
+            </downloadurl>
+        </downloads>
+
+        <tags>
+            <tag>stable</tag>
+        </tags>
+
+        <section>updates</section>
+        <maintainer>Perfect Web Team</maintainer>
+        <maintainerurl>https://extensions.perfectwebteam.com</maintainerurl>
+
+        <targetplatform name="joomla" version="3.[0-9]"/>
+    </update>
+</updates>
