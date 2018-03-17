@@ -1,13 +1,8 @@
 <?php
 /**
- * @version    1.0.4
- * @package    Postcode API
- * @author     René Kreijveld <info@renekreijveld.nl>
- * @copyright  2016 René Kreijveld Webdevelopment
- * @license    GNU General Public License version 2 or later
- *
- * Deze code zoekt aan de hand van postcode en huisnummer de bijbehorende adresgegevens op via postcodeapi.nu.
- *
+ * @package       RSform!Pro
+ * @copyright (C) 2018 extensions.perfectwebteam.com
+ * @license       GPL, http://www.gnu.org/copyleft/gpl.html
  */
 
 /**

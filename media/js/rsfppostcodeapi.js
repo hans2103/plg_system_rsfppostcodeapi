@@ -1,11 +1,7 @@
 /*!
- * @version    1.0.3
- * @package    Postcode API
- * @author     René Kreijveld <info@renekreijveld.nl>
- * @copyright  2016 René Kreijveld Webdevelopment
- * @license    GNU General Public License version 2 or later
- *
- * This code calls the local PHP proxy to get address info
+ * @package       RSform!Pro - Postcode API
+ * @copyright (C) 2018 extensions.perfectwebteam.com
+ * @license       GPL, http://www.gnu.org/copyleft/gpl.html
  *
  */
 

@@ -1,9 +1,10 @@
 <?php
 /**
- * @version       1.0
+ * @package       RSform!Pro
  * @copyright (C) 2018 extensions.perfectwebteam.com
  * @license       GPL, http://www.gnu.org/copyleft/gpl.html
  */
+
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
