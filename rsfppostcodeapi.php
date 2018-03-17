@@ -33,7 +33,7 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	 *
 	 * @param   object $form The form object that is being stored.
 	 *
-	 * @return  bool  True on success | False on failure
+	 * @return  mixed  True on success | False on failure
 	 *
 	 * @since   2.12
 	 *
@@ -42,7 +42,6 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	 */
 	public function rsfp_onFormSave($form)
 	{
-		//$post            = JRequest::get('post', JREQUEST_ALLOWRAW);
 		$post            = Factory::getApplication()->input->get('postcodeapiParams', array(), 'array');
 		$post['form_id'] = $form->FormId;
 
@@ -50,34 +49,39 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 
 		if (!$row)
 		{
-			return;
+			return '';
 		}
 
 		if (!$row->bind($post))
 		{
-			JError::raiseWarning(500, $row->getError());
-
-			return false;
+			throw new RuntimeException($row->getError(), 500);
 		}
 
-		$db = Factory::getDBO();
-		$db->setQuery("SELECT form_id FROM #__rsform_postcodeapi WHERE form_id='".(int) $post['form_id']."'");
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select($db->quoteName('form_id'))
+			->from($db->quoteName('#__rsform_postcodeapi'))
+			->where($db->quoteName('form_id') . ' = ' . (int) $post['form_id']);
+		$db->setQuery($query);
+
 		if (!$db->loadResult())
 		{
-			$db->setQuery("INSERT INTO #__rsform_postcodeapi SET form_id='".(int) $post['form_id']."'");
-			$db->execute();
+			$query = $db->getQuery(true)
+				->insert($db->quoteName('#__rsform_postcodeapi'))
+				->set($db->quoteName('form_id') . ' = ' . (int) $post['form_id']);
+			$db->setQuery($query)->execute();
 		}
 
-		if ($row->store())
+		try
 		{
-			return true;
+			$row->store();
 		}
-		else
+		catch (RuntimeException $e)
 		{
-			JError::raiseWarning(500, $row->getError());
+			return JError::raiseWarning(500, $e->getMessage());
+		}
 
-			return false;
-		}
+		return true;
 	}
 
 	public function rsfp_bk_onFormCopy($args)
@@ -85,49 +89,60 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 		$formId    = $args['formId'];
 		$newFormId = $args['newFormId'];
 
-		if ($row = Table::getInstance('RSForm_Postcodeapi', 'Table'))
+		$row = Table::getInstance('RSForm_Postcodeapi', 'Table');
+
+		if (!$row)
 		{
-			if ($row->load($formId))
-			{
-				$vars = unserialize($row->published);
-
-				if (isset($vars['form_id']))
-				{
-					$vars['form_id'] = $newFormId;
-				}
-
-				if (!$row->bind(array('form_id' => $newFormId, 'cc_merge_vars' => serialize($vars))))
-				{
-					JError::raiseWarning(500, $row->getError());
-
-					return false;
-				}
-
-				$db    = Factory::getDbo();
-				$query = $db->getQuery(true)
-					->select($db->qn('form_id'))
-					->from($db->qn('#__rsform_postcodeapi'))
-					->where($db->qn('form_id') . '=' . $db->q($newFormId));
-				if (!$db->setQuery($query)->loadResult())
-				{
-					$query = $db->getQuery(true)
-						->insert($db->qn('#__rsform_postcodeapi'))
-						->set($db->qn('form_id') . '=' . $db->q($newFormId));
-					$db->setQuery($query)->execute();
-				}
-
-				if ($row->store())
-				{
-					return true;
-				}
-				else
-				{
-					JError::raiseWarning(500, $row->getError());
-
-					return false;
-				}
-			}
+			return '';
 		}
+
+
+		if (!$row->load($formId))
+		{
+			return '';
+		}
+
+		$vars = unserialize($row->published);
+
+		if (isset($vars['form_id']))
+		{
+			$vars['form_id'] = $newFormId;
+		}
+
+		try
+		{
+			$row->bind(array('form_id' => $newFormId, 'cc_merge_vars' => serialize($vars)));
+		}
+		catch (RuntimeException $e)
+		{
+			return JError::raiseWarning(500, $e->getMessage());
+		}
+
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select($db->quoteName('form_id'))
+			->from($db->quoteName('#__rsform_postcodeapi'))
+			->where($db->quoteName('form_id') . '=' . (int) $newFormId);
+		$db->setQuery($query);
+
+		if (!$db->loadResult())
+		{
+			$query = $db->getQuery(true)
+				->insert($db->quoteName('#__rsform_postcodeapi'))
+				->set($db->quoteName('form_id') . '=' . (int) $newFormId);
+			$db->setQuery($query)->execute();
+		}
+
+		try
+		{
+			$row->store();
+		}
+		catch (RuntimeException $e)
+		{
+			return JError::raiseWarning(500, $e->getMessage());
+		}
+
+		return true;
 	}
 
 	/**
@@ -169,7 +184,7 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
                     <tr>
                         <td valign="top" align="left" width="30%">
                             <table class="table table-bordered">
-                                <div class="alert alert-warning"><?php echo JText::_('PLG_RSFP_POSATCODEAPI_NOTOKEN') ?></div>
+                                <div class="alert alert-warning"><?php echo Text::_('PLG_RSFP_POSTCODEAPI_NOTOKEN') ?></div>
                             </table>
                         </td>
                     </tr>
@@ -187,7 +202,7 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 		$row->load($formId);
 
 		// Get all RS Form! Fields
-		$fields_array = $this->_getFields($formId);
+		$fields_array = $this->getFields($formId);
 
 		$fields = array();
 		foreach ($fields_array as $field)
@@ -240,15 +255,16 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	/**
 	 * Load any files needed for the form display.
 	 *
-	 * @param   array  $details  An array of form details.
+	 * @param   array $details An array of form details.
 	 *
-	 * @return  void.
+	 * @return  void
 	 *
 	 * @since   4.3.0
 	 */
 	public function rsfp_bk_onBeforeCreateFrontComponentBody($details)
 	{
 		$code = RSFormProHelper::getConfig('postcodeapi.code');
+
 		if (empty($code))
 		{
 			return;
@@ -264,11 +280,27 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 		HTMLHelper::_('script', 'plg_system_rsfppostcodeapi/rsfppostcodeapi.js', array('version' => 'auto', 'relative' => true));
 	}
 
-	protected function _getFields($formId)
+	/**
+	 * Get fields from given formId.
+	 *
+	 * @param   int $formId The ID of the form to get fields.
+	 *
+	 * @return  array  list with property value
+	 *
+	 * @since   1.0
+	 *
+	 * @throws  RuntimeException
+	 */
+	protected function getFields($formId)
 	{
-		$db = Factory::getDBO();
-
-		$db->setQuery("SELECT p.PropertyValue FROM #__rsform_components c LEFT JOIN #__rsform_properties p ON (c.ComponentId=p.ComponentId) WHERE c.FormId='" . (int) $formId . "' AND p.PropertyName='NAME' ORDER BY c.Order");
+		$db    = Factory::getDbo();
+		$query = $db->getQuery(true)
+			->select($db->quoteName('p.PropertyValue'))
+			->from($db->quoteName('#__rsform_components', 'c'))
+			->join('LEFT', $db->quoteName('#__rsform_properties', 'p') . ' ON (' . $db->quoteName('c.ComponentId') . ' = ' . $db->quoteName('p.ComponentId') . ')')
+			->where(array($db->quoteName('c.FormId') . ' = ' . (int) $formId, $db->quoteName('p.PropertyName') . ' = ' . $db->quote('NAME')))
+			->order($db->quoteName('c.Order'));
+		$db->setQuery($query);
 
 		return $db->loadColumn();
 	}
@@ -278,9 +310,9 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	 *
 	 * @param   int $formId The ID of the form to delete.
 	 *
-	 * @return  void.
+	 * @return  void
 	 *
-	 * @since   4.0
+	 * @since   1.0
 	 *
 	 * @throws  RuntimeException
 	 */
@@ -300,7 +332,7 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	 * @param   RSFormProBackupXML $xml    The XML object.
 	 * @param   object             $fields The form fields.
 	 *
-	 * @return  void.
+	 * @return  void
 	 *
 	 * @since   4.0
 	 *
@@ -311,9 +343,10 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select('*')
-			->from($db->qn('#__rsform_postcodeapi'))
-			->where($db->qn('form_id') . '=' . $db->q($form->FormId));
+			->from($db->quoteName('#__rsform_postcodeapi'))
+			->where($db->quoteName('form_id') . ' = ' . (int) $form->FormId);
 		$db->setQuery($query);
+
 		if ($cc = $db->loadObject())
 		{
 			// No need for a form_id
@@ -343,30 +376,32 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	 */
 	public function rsfp_onFormRestore($form, $xml, $fields)
 	{
-		if (isset($xml->postcodeapi))
+		if (!isset($xml->postcodeapi))
 		{
-			$data = array();
-
-			foreach ($xml->postcodeapi->children() as $property => $value)
-			{
-				$data[$property] = (string) $value;
-			}
-
-			$row = Table::getInstance('RSForm_Postcodeapi', 'Table');
-
-			if (!$row->load($form->FormId))
-			{
-				$db    = Factory::getDbo();
-				$query = $db->getQuery(true);
-				$query->insert('#__rsform_postcodeapi')
-					->set(array(
-						$db->qn('form_id') . '=' . $db->q($form->FormId),
-					));
-				$db->setQuery($query)->execute();
-			}
-
-			$row->save($data);
+			return '';
 		}
+
+		$data = array();
+
+		foreach ($xml->postcodeapi->children() as $property => $value)
+		{
+			$data[$property] = (string) $value;
+		}
+
+		$row = Table::getInstance('RSForm_Postcodeapi', 'Table');
+
+		if (!$row->load($form->FormId))
+		{
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true);
+			$query->insert('#__rsform_postcodeapi')
+				->set(array(
+					$db->quoteName('form_id') . ' = ' . (int) $form->FormId,
+				));
+			$db->setQuery($query)->execute();
+		}
+
+		$row->save($data);
 
 		return true;
 	}
@@ -384,5 +419,4 @@ class plgSystemRSFPPostcodeapi extends CMSPlugin
 	{
 		Factory::getDbo()->truncateTable('#__rsform_postcodeapi');
 	}
-
 }
