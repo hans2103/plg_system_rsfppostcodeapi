@@ -67,7 +67,7 @@ class plgSystemRSFPPostcodeapiInstallerScript
 	}
 	
 	protected function runSQL($parent, $file) {
-		$db 	= JFactory::getDbo();
+		$db 	= Factory::getDbo();
 		$driver = strtolower($db->name);
 		$src    = $parent->getParent()->getPath('source');
 		if (strpos($driver, 'mysql') !== false) {
