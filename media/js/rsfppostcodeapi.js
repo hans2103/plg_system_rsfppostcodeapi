@@ -14,14 +14,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getData() {
         if (inputPostcode.value !== '' && inputHuisnummer.value !== '') {
-            var apiURL = "/media/plg_system_rsfppostcodeapi/rsfppostcodeapi.php?postcode=" + inputPostcode.value + "&number=" + inputHuisnummer.value,
+            var request = {
+                    'option': 'com_ajax',
+                    'plugin': 'rsfppostcodeapi',
+                    'format': 'json',
+                    'data': {'postcode': inputPostcode.value, 'number': inputHuisnummer.value}
+                },
                 inputStraat = document.getElementById("straat"),
                 inputPlaats = document.getElementById("plaats"),
                 inputProvincie = document.getElementById("provincie"),
                 inputLat = document.getElementById("lat"),
                 inputLon = document.getElementById("lon");
 
-            getJSON(apiURL, function (json) {
+            getJSON(request, function (json) {
                 if (json.success === true) {
                     if (inputStraat) {
                         inputStraat.setAttribute('value', (json.data[0].street));
@@ -59,30 +64,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Remember XHMLHTTP requests are asynchronous!!
     function getJSON(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.onload = function (e) {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    var res = xhr.responseText;
-                    // Executes your callback with the
-                    // response already parsed into JSON
-                    callback(JSON.parse(res));
-                } else { // Server responded with some error
-                    console.error(xhr.statusText);
-                } // End of verifying response status
-            } // Please read: http://www.w3schools.com/ajax/...
-              // .../ajax_xmlhttprequest_onreadystatechange.asp
-        }; // End of what to do when the response is answered
-
-        // What to do if there's an error with the request
-        xhr.onerror = function (e) {
-            console.error(xhr.statusText);
-        }; // End of error handling
-
-        // Send the request to the server
-        xhr.send(null);
-    } // End of getJSON function
+        jQuery.ajax({
+            type: 'GET',
+            data: url,
+            dataType: 'json',
+            success: function (response) {
+                callback(response)
+            }
+        });
+    }
 });
