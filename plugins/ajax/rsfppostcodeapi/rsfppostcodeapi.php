@@ -1,26 +1,36 @@
 <?php
 /**
- * @package       RSform!Pro
- * @copyright (C) 2018 extensions.perfectwebteam.com
- * @license       GPL, http://www.gnu.org/copyleft/gpl.html
+ * @package    RSform!Pro
+ *
+ * @author     Perfect Web Team <hallo@perfectwebteam.nl>
+ * @copyright  Copyright (C) 2018 Perfect Web Team. All rights reserved.
+ * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ * @link       https://perfectwebteam.nl
  */
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 
-
 defined('_JEXEC') or die;
 
-jimport('joomla.plugin.plugin');
-
+/**
+ * AJAX plugin for RSForm! Postcode API check.
+ *
+ * @package     RSform!Pro
+ * @since       1.0.0
+ */
 class PlgAjaxRsfppostcodeapi extends CMSPlugin
 {
 	/**
-	 * @return array|bool
-	 * @throws Exception
-	 * @since 1.0.0
+	 * Do the postcode check.
+	 *
+	 * @return  array  The result of the check.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since   1.0.0
 	 */
-	function onAjaxRsfppostcodeapi()
+	public function onAjaxRsfppostcodeapi()
 	{
 		$input = Factory::getApplication()->input;
 
@@ -29,7 +39,7 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 		$postcode = strtoupper((string) $data[0]);
 		$number   = (int) $data[1];
 
-		// get API key from given FormID
+		// Get API key from given FormID
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query
@@ -38,16 +48,15 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 			->where($db->quoteName('SettingName') . '=' . $db->quote('postcodeapi.code'));
 		$db->setQuery($query);
 		$db->execute();
-		$num_rows = $db->getNumRows();
+		$rows = $db->getNumRows();
 
-		if (!$num_rows > 1)
+		if (!$rows > 1)
 		{
 			return false;
 		}
 
 		$result = $db->loadObject();
-		$apikey = $result->SettingValue;
-
+		$apiKey = $result->SettingValue;
 
 		if (strlen($postcode) == 7)
 		{
@@ -57,7 +66,7 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 		if ($postcode !== '' && $number !== '')
 		{
 			$headers   = array();
-			$headers[] = 'X-Api-Key: ' . $apikey;
+			$headers[] = 'X-Api-Key: ' . $apiKey;
 
 			// De URL naar de API call
 			$url = 'https://postcode-api.apiwise.nl/v2/addresses/?postcode=' . $postcode . '&number=' . $number;
@@ -82,7 +91,7 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 				$lat      = $addressdata->geo->center->wgs84->coordinates[1];
 				$lon      = $addressdata->geo->center->wgs84->coordinates[0];
 
-				$return_data = array(
+				$returnData = array(
 					"city"     => $city,
 					"street"   => $street,
 					"province" => $province,
@@ -94,18 +103,18 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 			}
 			else
 			{
-				$return_data = array(
+				$returnData = array(
 					'error' => 'De combinatie van postcode en huisnummer kan niet worden gevonden'
 				);
 			}
 		}
 		else
 		{
-			$return_data = array(
+			$returnData = array(
 				'error' => 'Er zijn geen postcode of huisnummer bij ons binnen gekomen'
 			);
 		}
 
-		return $return_data;
+		return $returnData;
 	}
 }
