@@ -1,4 +1,4 @@
-/*!
+/**
  * @package       RSform!Pro - Postcode API
  * @copyright (C) 2018 extensions.perfectwebteam.com
  * @license       GPL, http://www.gnu.org/copyleft/gpl.html
@@ -6,72 +6,96 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-    var inputPostcode = document.getElementById("postcode");
-    var inputHuisnummer = document.getElementById("huisnummer");
+        // Get all elements with class "postcode"
+        let postcodes = document.getElementsByClassName("postcode");
 
-    inputPostcode.addEventListener("blur", getData, false);
-    inputHuisnummer.addEventListener("blur", getData, false);
+        for (let i = 0; i < postcodes.length; i++) {
+            document.getElementById(postcodes[i].id).addEventListener("blur", getData, false);
+        }
 
-    function getData() {
-        if (inputPostcode.value !== '' && inputHuisnummer.value !== '') {
-            var request = {
-                    'option': 'com_ajax',
-                    'plugin': 'rsfppostcodeapi',
-                    'format': 'json',
-                    'data': {'postcode': inputPostcode.value, 'number': inputHuisnummer.value}
-                },
-                inputStraat = document.getElementById("straat"),
-                inputPlaats = document.getElementById("plaats"),
-                inputProvincie = document.getElementById("provincie"),
-                inputLat = document.getElementById("lat"),
-                inputLon = document.getElementById("lon");
+        // Get all elements with class "huisnummer"
+        let huisnummers = document.getElementsByClassName("huisnummer");
 
-            getJSON(request, function (json) {
-                if (json.success === true) {
-                    if (inputStraat) {
-                        inputStraat.setAttribute('value', (json.data[0].street));
-                    }
-                    if (inputPlaats) {
-                        inputPlaats.setAttribute('value', (json.data[0].city));
-                    }
-                    if (inputProvincie) {
-                        inputProvincie.setAttribute('value', (json.data[0].province));
-                    }
-                    if (inputLat) {
-                        inputLat.setAttribute('value', (json.data[0].lat));
-                    }
-                    if (inputLon) {
-                        inputLon.setAttribute('value', (json.data[0].lon));
-                    }
-                }
+        for (let i = 0; i < huisnummers.length; i++) {
+            document.getElementById(huisnummers[i].id).addEventListener("blur", getData, false);
+        }
 
-                if (inputStraat) {
-                    inputStraat.disabled = false;
+        function getData(element)
+        {
+            let inputPostcode = document.getElementById(element.target.dataset.postcode);
+            let inputHuisnummer = document.getElementById(element.target.dataset.huisnummer);
+
+            if (inputPostcode.value !== '' && inputHuisnummer.value !== '') {
+                let request = {
+                        'option': 'com_ajax',
+                        'plugin': 'rsfppostcodeapi',
+                        'format': 'json',
+                        'data': {'postcode': inputPostcode.value, 'number': inputHuisnummer.value}
+                    },
+                    inputStraat = document.getElementById(element.target.dataset.straat),
+                    inputPlaats = document.getElementById(element.target.dataset.plaats),
+                    inputProvincie = document.getElementById(element.target.dataset.provincie),
+                    inputLat = document.getElementById(element.target.dataset.lat),
+                    inputLon = document.getElementById(element.target.dataset.lon);
+
+                getJSON(request, function (json) {
+                        if (json.success === true) {
+                            if (inputStraat && json.data[0].street !== null) {
+                                inputStraat.setAttribute('value', (json.data[0].street));
+                            }
+
+                            if (inputPlaats && json.data[0].city !== null) {
+                                inputPlaats.setAttribute('value', (json.data[0].city));
+                            }
+
+                            if (inputProvincie && json.data[0].province !== null) {
+                                inputProvincie.setAttribute('value', (json.data[0].province));
+                            }
+
+                            if (inputLat && json.data[0].lat !== null) {
+                                inputLat.setAttribute('value', (json.data[0].lat));
+                            }
+
+                            if (inputLon && json.data[0].lon !== null) {
+                                inputLon.setAttribute('value', (json.data[0].lon));
+                            }
+                        }
+
+                        if (inputStraat) {
+                            inputStraat.disabled = false;
+                        }
+
+                        if (inputPlaats) {
+                            inputPlaats.disabled = false;
+                        }
+
+                        if (inputProvincie) {
+                            inputProvincie.disabled = false;
+                        }
+
+                        if (inputLat) {
+                            inputLat.disabled = false;
+                        }
+
+                        if (inputLon) {
+                            inputLon.disabled = false;
+                        }
+                    }
+                );
+            }
+        }
+
+        function getJSON(url, callback)
+        {
+            jQuery.ajax({
+                    type: 'GET',
+                    data: url,
+                    dataType: 'json',
+                    success: function (response) {
+                        callback(response)
+                    }
                 }
-                if (inputPlaats) {
-                    inputPlaats.disabled = false;
-                }
-                if (inputProvincie) {
-                    inputProvincie.disabled = false;
-                }
-                if (inputLat) {
-                    inputLat.disabled = false;
-                }
-                if (inputLon) {
-                    inputLon.disabled = false;
-                }
-            });
+            );
         }
     }
-
-    function getJSON(url, callback) {
-        jQuery.ajax({
-            type: 'GET',
-            data: url,
-            dataType: 'json',
-            success: function (response) {
-                callback(response)
-            }
-        });
-    }
-});
+);
