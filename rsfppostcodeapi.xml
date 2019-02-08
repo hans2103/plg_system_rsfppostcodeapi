@@ -18,7 +18,6 @@
 	</files>
 
 	<media folder="media" destination="plg_system_rsfppostcodeapi">
-		<filename>rsfppostcodeapi.php</filename>
 		<folder>js</folder>
 	</media>
 
