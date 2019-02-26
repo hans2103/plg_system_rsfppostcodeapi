@@ -37,7 +37,13 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 		$data = $input->get('data');
 
 		$postcode = strtoupper((string) $data[0]);
-		$number   = (int) $data[1];
+		$number   = '';
+
+		// Check if a house number is supplied
+		if (isset($data[1]))
+		{
+			$number = (int) $data[1];
+		}
 
 		// Get API key from given FormID
 		$db    = Factory::getDbo();
@@ -63,13 +69,18 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 			$postcode = substr($postcode, 0, 4) . substr($postcode, 5, 2);
 		}
 
-		if ($postcode !== '' && $number !== '')
+		if ($postcode !== '')
 		{
 			$headers   = array();
 			$headers[] = 'X-Api-Key: ' . $apiKey;
 
 			// De URL naar de API call
-			$url = 'https://postcode-api.apiwise.nl/v2/addresses/?postcode=' . $postcode . '&number=' . $number;
+			$url = 'https://postcode-api.apiwise.nl/v2/addresses/?postcode=' . $postcode;
+
+			if ($number)
+			{
+				$url .= '&number=' . $number;
+			}
 
 			$curl = curl_init($url);
 
@@ -81,9 +92,9 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 
 			curl_close($curl);
 
-			if (isset($data->_embedded->addresses))
+			if (isset($data->_embedded->addresses) && is_array($data->_embedded->addresses))
 			{
-				$addressdata = $data->_embedded->addresses[0];
+				$addressdata = array_shift($data->_embedded->addresses);
 
 				$city     = $addressdata->city->label;
 				$street   = $addressdata->street;
