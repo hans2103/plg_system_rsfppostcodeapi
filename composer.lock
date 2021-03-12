@@ -1,0 +1,61 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "b7c874b986116db1f8d74843ca338726",
+    "packages": [
+        {
+            "name": "api-postcode/php-client",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/api-postcode/php-client.git",
+                "reference": "1393a22046ec52f0b47603bc314fcb179b8489a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/api-postcode/php-client/zipball/1393a22046ec52f0b47603bc314fcb179b8489a0",
+                "reference": "1393a22046ec52f0b47603bc314fcb179b8489a0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.1.0"
+            },
+            "type": "client",
+            "autoload": {
+                "psr-4": {
+                    "ApiPostcode\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Api Postcode",
+                    "email": "info@api-postcode.nl"
+                }
+            ],
+            "description": "PHP Client Api Postcode",
+            "homepage": "https://github.com/api-postcode/php-client",
+            "keywords": [
+                "postcode",
+                "postcode-api",
+                "zipcode"
+            ],
+            "time": "2021-02-26T08:25:07+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

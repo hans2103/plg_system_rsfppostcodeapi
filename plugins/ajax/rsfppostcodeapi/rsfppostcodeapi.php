@@ -71,26 +71,31 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 
 		if ($postcode !== '')
 		{
-			$headers   = array();
-			$headers[] = 'X-Api-Key: ' . $apiKey;
+//			$headers   = array();
+//			$headers[] = 'X-Api-Key: ' . $apiKey;
+//
+//			// De URL naar de API call
+//			$url = 'https://postcode-api.apiwise.nl/v2/addresses/?postcode=' . $postcode;
+//
+//			if ($number)
+//			{
+//				$url .= '&number=' . $number;
+//			}
+//
+//			$curl = curl_init($url);
+//
+//			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+//
+//			$response = curl_exec($curl);
+//			$data     = json_decode($response);
+//
+//			curl_close($curl);
 
-			// De URL naar de API call
-			$url = 'https://postcode-api.apiwise.nl/v2/addresses/?postcode=' . $postcode;
+			$token = '5f8f57d5-d153-4f99-8926-019f6e304340';
+			$client = new \ApiPostcode\Client\PostcodeClient($token);
 
-			if ($number)
-			{
-				$url .= '&number=' . $number;
-			}
-
-			$curl = curl_init($url);
-
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-			$response = curl_exec($curl);
-			$data     = json_decode($response);
-
-			curl_close($curl);
+			$address = $client->fetchAddress($postcode, $number);
 
 			if (isset($data->_embedded->addresses) && is_array($data->_embedded->addresses))
 			{
