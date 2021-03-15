@@ -6,7 +6,7 @@
 	<license>GPLv3 http://www.gnu.org/licenses/gpl.html</license>
 	<authorEmail>extensions@perfectwebteam.com</authorEmail>
 	<authorUrl>https://extensions.perfectwebteam.com</authorUrl>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<description><![CDATA[PLG_RSFP_POSTCODEAPI_DESCRIPTION]]></description>
 	<scriptfile>script.php</scriptfile>
 
