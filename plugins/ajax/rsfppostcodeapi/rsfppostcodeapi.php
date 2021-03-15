@@ -74,7 +74,6 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 
 		if ($postcode !== '')
 		{
-//			$token = '5f8f57d5-d153-4f99-8926-019f6e304340';
 			$client = new PostcodeClient($token);
 
 			try
