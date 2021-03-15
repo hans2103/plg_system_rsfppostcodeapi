@@ -1,0 +1,27 @@
+{
+  "name": "api-postcode/php-client",
+  "type": "client",
+  "description": "PHP Client Api Postcode",
+  "keywords": [
+    "Postcode",
+    "Zipcode",
+    "postcode-api"
+  ],
+  "homepage": "https://github.com/api-postcode/php-client",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Api Postcode",
+      "email": "info@api-postcode.nl"
+    }
+  ],
+  "require": {
+      "php": ">=7.1.0",
+      "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ApiPostcode\\": ""
+    }
+  }
+}

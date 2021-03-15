@@ -8,10 +8,13 @@
  * @link       https://perfectwebteam.nl
  */
 
+defined('_JEXEC') or die;
+
+use ApiPostcode\Client\PostcodeClient;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 
-defined('_JEXEC') or die;
+require_once JPATH_LIBRARIES . "/Postcode/vendor/autoload.php";
 
 /**
  * AJAX plugin for RSForm! Postcode API check.
@@ -26,9 +29,9 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 	 *
 	 * @return  array  The result of the check.
 	 *
+	 * @since   1.0.0
 	 * @throws  Exception
 	 *
-	 * @since   1.0.0
 	 */
 	public function onAjaxRsfppostcodeapi()
 	{
@@ -56,13 +59,13 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 		$db->execute();
 		$rows = $db->getNumRows();
 
-		if (!$rows > 1)
+		if (!($rows > 1))
 		{
 			return false;
 		}
 
 		$result = $db->loadObject();
-		$apiKey = $result->SettingValue;
+		$token  = $result->SettingValue;
 
 		if (strlen($postcode) == 7)
 		{
@@ -71,64 +74,42 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 
 		if ($postcode !== '')
 		{
-//			$headers   = array();
-//			$headers[] = 'X-Api-Key: ' . $apiKey;
-//
-//			// De URL naar de API call
-//			$url = 'https://postcode-api.apiwise.nl/v2/addresses/?postcode=' . $postcode;
-//
-//			if ($number)
-//			{
-//				$url .= '&number=' . $number;
-//			}
-//
-//			$curl = curl_init($url);
-//
-//			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-//			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-//
-//			$response = curl_exec($curl);
-//			$data     = json_decode($response);
-//
-//			curl_close($curl);
+//			$token = '5f8f57d5-d153-4f99-8926-019f6e304340';
+			$client = new PostcodeClient($token);
 
-			$token = '5f8f57d5-d153-4f99-8926-019f6e304340';
-			$client = new \ApiPostcode\Client\PostcodeClient($token);
-
-			$address = $client->fetchAddress($postcode, $number);
-
-			if (isset($data->_embedded->addresses) && is_array($data->_embedded->addresses))
+			try
 			{
-				$addressdata = array_shift($data->_embedded->addresses);
+				$address = $client->fetchAddress($postcode, $number);
+			}
+			catch (Exception $e)
+			{
+				//do nothing
+			}
 
-				$city     = $addressdata->city->label;
-				$street   = $addressdata->street;
-				$province = $addressdata->province->label;
-				$lat      = $addressdata->geo->center->wgs84->coordinates[1];
-				$lon      = $addressdata->geo->center->wgs84->coordinates[0];
-
-				$returnData = array(
-					"city"     => $city,
-					"street"   => $street,
-					"province" => $province,
-					"lat"      => $lat,
-					"lon"      => $lon
-				);
+			if (isset($address) && is_object($address))
+			{
+				$returnData = [
+					"city"     => $address->getCity(),
+					"street"   => $address->getStreet(),
+					"province" => $address->getProvince(),
+					"lat"      => $address->getLatitude(),
+					"lon"      => $address->getLongitude()
+				];
 
 				header('Content-type:application/json;charset=utf-8');
 			}
 			else
 			{
-				$returnData = array(
+				$returnData = [
 					'error' => 'De combinatie van postcode en huisnummer kan niet worden gevonden'
-				);
+				];
 			}
 		}
 		else
 		{
-			$returnData = array(
+			$returnData = [
 				'error' => 'Er zijn geen postcode of huisnummer bij ons binnen gekomen'
-			);
+			];
 		}
 
 		return $returnData;

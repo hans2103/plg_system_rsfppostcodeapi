@@ -21,6 +21,10 @@
 		<folder>js</folder>
 	</media>
 
+	<files folder="libraries" destination="plg_system_rsfppostcodeapi">
+		<folder>Postcode</folder>
+	</files>
+
 	<updateservers>
 		<server type="extension" priority="1" name="RSForm! Pro - Postcode API">https://raw.githubusercontent.com/perfectwebteam/plg_system_rsfppostcodeapi/master/update/extension.xml</server>
 	</updateservers>
