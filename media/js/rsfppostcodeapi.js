@@ -54,23 +54,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 getJSON(request, function (json) {
                         if (json.success === true) {
-                            if (inputStraat && json.data[0].street !== null) {
+                            if (inputStraat && json.data[0].street !== null && json.data[0].street !== undefined) {
                                 inputStraat.value = json.data[0].street;
                             }
 
-                            if (inputPlaats && json.data[0].city !== null) {
+                            if (inputPlaats && json.data[0].city !== null && json.data[0].city !== undefined) {
                                 inputPlaats.value = json.data[0].city;
                             }
 
-                            if (inputProvincie && json.data[0].province !== null) {
+                            if (inputProvincie && json.data[0].province !== null && json.data[0].province !== undefined) {
                                 inputProvincie.value = json.data[0].province;
                             }
 
-                            if (inputLat && json.data[0].lat !== null) {
+                            if (inputLat && json.data[0].lat !== null && json.data[0].lat !== undefined) {
                                 inputLat.value = json.data[0].lat;
                             }
 
-                            if (inputLon && json.data[0].lon !== null) {
+                            if (inputLon && json.data[0].lon !== null && json.data[0].lon !== undefined) {
                                 inputLon.value = json.data[0].lon;
                             }
                         }
