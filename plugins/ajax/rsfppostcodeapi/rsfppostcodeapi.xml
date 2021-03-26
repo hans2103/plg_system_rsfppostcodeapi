@@ -2,8 +2,8 @@
 <extension version="3.0" type="plugin" group="ajax" method="upgrade">
     <name>Ajax - RSForm! Pro Postcode API</name>
     <author>Perfect Web Team</author>
-    <creationDate>December 2018</creationDate>
-    <copyright>Copyright (C) 2018 Perfect Web Team</copyright>
+    <creationDate>March 2021</creationDate>
+    <copyright>Copyright (C) 2021 Perfect Web Team</copyright>
     <license>GPLv3 http://www.gnu.org/licenses/gpl.html</license>
     <authorEmail>info@perfectwebteam.nl</authorEmail>
     <authorUrl>www.perfectwebteam.nl</authorUrl>
