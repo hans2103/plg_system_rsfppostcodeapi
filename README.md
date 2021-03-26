@@ -16,4 +16,7 @@ The result of the zipcode check are several data items (with the class the field
  - latitude `js-lat`
  - longitude `js-lon`
 
-These class names need to be added under the `Attributes` tab when editing a field in RSForm! in order for the auto-complete to work.
+These class names need to be added under the `Attributes` tab in the textarea when editing a field in RSForm! in order for the auto-complete to work. Below an example.
+
+Example: 
+``class="js-postcode"``
