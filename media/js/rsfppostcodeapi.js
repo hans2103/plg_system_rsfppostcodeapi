@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         'option': 'com_ajax',
                         'plugin': 'rsfppostcodeapi',
                         'format': 'json',
-                        'data': data
+                        'postcode': data.postcode,
+                        'number': data.number
                     },
                     inputStraat = document.getElementsByClassName('js-straat')[0],
                     inputPlaats = document.getElementsByClassName('js-plaats')[0],

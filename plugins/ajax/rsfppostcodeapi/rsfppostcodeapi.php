@@ -7,7 +7,6 @@
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  * @link       https://perfectwebteam.nl
  */
-
 defined('_JEXEC') or die;
 
 use ApiPostcode\Client\PostcodeClient;
@@ -37,17 +36,6 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 	{
 		$input = Factory::getApplication()->input;
 
-		$data = $input->get('data');
-
-		$postcode = strtoupper((string) $data[0]);
-		$number   = '';
-
-		// Check if a house number is supplied
-		if (isset($data[1]))
-		{
-			$number = (int) $data[1];
-		}
-
 		// Get API key from given FormID
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
@@ -57,8 +45,8 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 			->where($db->quoteName('SettingName') . '=' . $db->quote('postcodeapi.code'));
 		$db->setQuery($query);
 		$db->execute();
-		$rows = $db->getNumRows();
 
+		$rows = $db->getNumRows();
 		if ($rows < 1)
 		{
 			return false;
@@ -67,15 +55,22 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 		$result = $db->loadObject();
 		$token  = $result->SettingValue;
 
+		// Postcode
+		$postcode = strtoupper((string) $input->get('postcode'));
 		if (strlen($postcode) == 7)
 		{
 			$postcode = substr($postcode, 0, 4) . substr($postcode, 5, 2);
 		}
+		// Check if a house number is supplied
+		$number = '';
+		if (!empty((string) $input->get('number')))
+		{
+			$number = (string) $input->get('number');
+		}
 
-		if ($postcode !== '')
+		if ($postcode && $number)
 		{
 			$client = new PostcodeClient($token);
-
 			try
 			{
 				$address = $client->fetchAddress($postcode, $number);
@@ -84,7 +79,6 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 			{
 				//do nothing
 			}
-
 			if (isset($address) && is_object($address))
 			{
 				$returnData = [
@@ -94,7 +88,6 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 					"lat"      => $address->getLatitude(),
 					"lon"      => $address->getLongitude()
 				];
-
 				header('Content-type:application/json;charset=utf-8');
 			}
 			else
