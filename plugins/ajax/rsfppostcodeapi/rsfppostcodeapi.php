@@ -59,7 +59,7 @@ class PlgAjaxRsfppostcodeapi extends CMSPlugin
 		$db->execute();
 		$rows = $db->getNumRows();
 
-		if (!($rows > 1))
+		if ($rows < 1)
 		{
 			return false;
 		}
