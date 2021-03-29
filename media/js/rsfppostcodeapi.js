@@ -8,25 +8,26 @@
 document.addEventListener("DOMContentLoaded", function () {
 
         // Get all elements with class "postcode"
-        let postcodes = document.getElementsByClassName("js-postcode");
+        var postcodes = document.getElementsByClassName("js-postcode");
 
-        for (let i = 0; i < postcodes.length; i++) {
-            document.getElementById(postcodes[i].id).addEventListener("blur", getData, false);
+        for (var i = 0; i < postcodes.length; i++) {
+            document.getElementById(postcodes[i].id).addEventListener("blur", function (){ getData(this) }, false);
         }
 
         // Get all elements with class "huisnummer"
-        let huisnummers = document.getElementsByClassName("js-huisnummer");
+        var huisnummers = document.getElementsByClassName("js-huisnummer");
 
-        for (let i = 0; i < huisnummers.length; i++) {
-            document.getElementById(huisnummers[i].id).addEventListener("blur", getData, false);
+        for (var j = 0; j < huisnummers.length; j++) {
+            document.getElementById(huisnummers[j].id).addEventListener("blur", function (){ getData(this) }, false);
         }
 
         function getData(element) {
-            let inputPostcode = document.getElementsByClassName('js-postcode')[0];
-            let inputHuisnummer = document.getElementsByClassName('js-huisnummer')[0];
+            var count = element.dataset.count - 1;
+            var inputPostcode = document.getElementsByClassName('js-postcode')[count];
+            var inputHuisnummer = document.getElementsByClassName('js-huisnummer')[count];
 
             if (inputPostcode.value !== '') {
-                let data = {};
+                var data = {};
 
                 if (inputHuisnummer && inputHuisnummer.value === '') {
                     return;
@@ -40,18 +41,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     data.number = inputHuisnummer.value;
                 }
 
-                let request = {
+                var request = {
                         'option': 'com_ajax',
                         'plugin': 'rsfppostcodeapi',
                         'format': 'json',
                         'postcode': data.postcode,
                         'number': data.number
                     },
-                    inputStraat = document.getElementsByClassName('js-straat')[0],
-                    inputPlaats = document.getElementsByClassName('js-plaats')[0],
-                    inputProvincie = document.getElementsByClassName('js-provincie')[0],
-                    inputLat = document.getElementsByClassName('js-lat')[0],
-                    inputLon = document.getElementsByClassName('js-lon')[0];
+                    inputStraat = document.getElementsByClassName('js-straat')[count],
+                    inputPlaats = document.getElementsByClassName('js-plaats')[count],
+                    inputProvincie = document.getElementsByClassName('js-provincie')[count],
+                    inputLat = document.getElementsByClassName('js-lat')[count],
+                    inputLon = document.getElementsByClassName('js-lon')[count];
 
                 getJSON(request, function (json) {
                         if (json.success === true) {

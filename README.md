@@ -16,7 +16,9 @@ The result of the zipcode check are several data items (with the class the field
  - latitude `js-lat`
  - longitude `js-lon`
 
+The fields ``postcode`` and `huisnummer` also need the data attribute `data-count="number"`. Count starts at 1. The count attribute is used to target the right set of address classes. When you add another set of address fields to the form, you use `data-count="2"`.
+
 These class names need to be added under the `Attributes` tab in the textarea when editing a field in RSForm! in order for the auto-complete to work. Below an example.
 
 Example: 
-``class="js-postcode"``
+``class="js-postcode" data-count="1"``
